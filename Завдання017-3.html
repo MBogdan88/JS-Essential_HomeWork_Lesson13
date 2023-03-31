@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Завдання017-3</title>
+
+    <style>
+        .form-group {
+            margin: 4px;
+        }
+
+        .form-group label {
+            width: 75px;
+            display: inline-block;
+        }
+
+        table{
+            text-align: center;
+            width: 30%;
+            border: 2px solid black;
+            border-collapse: separate;
+            border-spacing: 0px 5px;
+        }
+        th, td{
+            border: 1px solid black;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <form name="writeForm">
+        <div class="form-group">
+            <label>Ключ</label>
+            <input type="text" name="keyInput" required>
+        </div>
+        <div class="form-group">
+            <label>Значення</label>
+            <input type="text" name="valueInput" required>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Запис">
+        </div>
+    </form>
+
+    <br>
+
+    <form name="readForm">
+        <div class="form-group">
+            <label>Ключ</label>
+            <input type="text" name="keyInput" required>
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Читання">
+        </div>
+    </form>
+    <button id="showAllButton">Показати все</button>
+    <button id="clearBtn">Очистити localStorage</button>
+
+    <br>
+
+    <table id="table">
+    </table>
+
+    <script>
+        /*
+        Завдання:
+        Додайте на сторінку кнопку "Показати все". Під час натискання на цю кнопку на сторінці
+        має з'явитися або оновитися таблиця з вмістом localStorrage. Перша колонка таблиці – ключ, друга – значення.
+        
+        Додайте кнопку "Очистити localStorage" на сторінку. Під час натискання на кнопку localStorage має бути очищений.
+        */
+        document.forms.writeForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+            const form = document.forms.writeForm;
+
+            let key = form.keyInput.value;
+            let value = form.valueInput.value;
+
+            localStorage.setItem(key, value); 
+            form.reset();
+        });
+
+        document.forms.readForm.addEventListener("submit", function (e) {
+            e.preventDefault();
+
+            const form = document.forms.readForm;
+            let key = form.keyInput.value;
+
+            let value = localStorage.getItem(key); 
+            alert(value);
+        });
+
+        const showAllButton = document.querySelector("#showAllButton");
+        showAllButton.addEventListener("click", () => {
+            const tableBody = document.querySelector("#table tbody");
+
+            const headers = ["Ключ", "Значення"];
+
+            const headerRow = document.createElement("tr");
+            headers.forEach(header => {
+                const th = document.createElement("th");
+                th.textContent = header;
+                headerRow.appendChild(th);
+            });
+            table.appendChild(headerRow);
+
+            for(let i = 0; i < localStorage.length; i++){
+                let key = localStorage.key(i);
+                let value = localStorage.getItem(key);
+
+                const row = document.createElement("tr");
+                const keyCell = document.createElement("td");
+                const valueCell = document.createElement("td");
+
+                keyCell.textContent = key;
+                valueCell.textContent = value;
+                
+                row.appendChild(keyCell);
+                row.appendChild(valueCell);
+                table.appendChild(row);
+            }
+
+            document.body.appendChild(table);
+
+            const clearButton = document.querySelector("#clearBtn");
+            clearButton.addEventListener("click", () => {
+                localStorage.clear();
+                table.innerHTML = "";
+            });
+            document.body.appendChild(clearButton);
+        });
+    </script>
+</body>
+
+</html>
